@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Service;
 
 namespace WebApp.Controllers
 {
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+        private IItemService itemService;
+        public SampleDataController(IItemService itemService)
+        {
+            this.itemService = itemService;
+        }
         private static string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -18,6 +24,9 @@ namespace WebApp.Controllers
         public IEnumerable<WeatherForecast> WeatherForecasts(int startDateIndex)
         {
             var rng = new Random();
+
+            itemService.ExecuteItem();
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 DateFormatted = DateTime.Now.AddDays(index + startDateIndex).ToString("d"),

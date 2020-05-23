@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebApp.Service;
 
 namespace WebApp
 {
@@ -20,7 +21,11 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddCors();
+            //services.AddSingleton<IService, ServiceCLass>(); //one time
+            //services.AddScope<IService, ServiceCLass>(); //each time create
+            //services.AddTransient<IService, ServiceCLass>(); //each time create
+            services.AddTransient<IItemService, ItemService>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -42,6 +47,8 @@ namespace WebApp
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseCors();
 
             app.UseMvc(routes =>
             {
